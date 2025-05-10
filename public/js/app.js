@@ -19503,7 +19503,7 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
         case 0:
           _context.prev = 0;
           _context.next = 3;
-          return navigator.serviceWorker.register('/sw.js');
+          return navigator.serviceWorker.register('sw.js');
         case 3:
           registration = _context.sent;
           console.log('ServiceWorker registration successful');
@@ -19543,14 +19543,14 @@ function _subscribeUser() {
           return _context2.abrupt("return", sendSubscriptionToServer(subscription));
         case 5:
           _context2.next = 7;
-          return fetch('/api/vapid-public-key');
+          return fetch('api/vapid-public-key');
         case 7:
           response = _context2.sent;
           _context2.next = 10;
-          return response.text();
+          return response.json();
         case 10:
           vapidPublicKey = _context2.sent;
-          convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+          convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey.publicKey);
           _context2.next = 14;
           return registration.pushManager.subscribe({
             userVisibleOnly: true,
@@ -19568,7 +19568,7 @@ function _subscribeUser() {
   return _subscribeUser.apply(this, arguments);
 }
 function sendSubscriptionToServer(subscription) {
-  return fetch('/notification/subscribe', {
+  return fetch('notification/subscribe', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

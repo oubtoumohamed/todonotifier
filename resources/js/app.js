@@ -3,7 +3,7 @@ require('./bootstrap');
 if ('serviceWorker' in navigator && 'PushManager' in window) {
     window.addEventListener('load', async () => {
         try {
-            const registration = await navigator.serviceWorker.register('/sw.js');
+            const registration = await navigator.serviceWorker.register('sw.js');
             console.log('ServiceWorker registration successful');
             
             await subscribeUser(registration);
@@ -20,9 +20,9 @@ async function subscribeUser(registration) {
         return sendSubscriptionToServer(subscription);
     }
 
-    const response = await fetch('/api/vapid-public-key');
-    const vapidPublicKey = await response.text();
-    const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+    const response = await fetch('api/vapid-public-key');
+    const vapidPublicKey = await response.json();
+    const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey.publicKey);
 
     const newSubscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
@@ -33,7 +33,7 @@ async function subscribeUser(registration) {
 }
 
 function sendSubscriptionToServer(subscription) {
-    return fetch('/notification/subscribe', {
+    return fetch('notification/subscribe', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

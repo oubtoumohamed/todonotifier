@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Todo::class);
     }
+
+    public function notificationSubscriptions()
+    {
+        return $this->hasMany(NotificationSubscription::class);
+    }
 }
