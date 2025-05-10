@@ -74,4 +74,11 @@ class NotificationController extends Controller
 
         return $webPush->flush();
     }
+    
+    public function getVapidPublicKey()
+    {
+        return response()->json([
+            'publicKey' => config('webpush.vapid.public_key')
+        ]);
+    }
 }
