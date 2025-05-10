@@ -30,11 +30,7 @@ class SendTodoNotifications extends Command
     public function handle()
     {
         $now = Carbon::now();
-        $todos = Todo::with('user')
-            ->where('due_date', '<=', $now->addMinutes(5))
-            ->where('completed', false)
-            ->where('notification_sent', false)
-            ->get();
+        $todos = Todo::with('user')->get();
 
         foreach ($todos as $todo) {
             NotificationController::sendNotification(
