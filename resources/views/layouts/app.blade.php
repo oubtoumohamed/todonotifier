@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo Notifier</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <script type="module" src="{{ asset('js/app.js') }}"></script>
+    <script type="module" src="{{ asset('js/app.js') }}?v=0.01"></script>
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
