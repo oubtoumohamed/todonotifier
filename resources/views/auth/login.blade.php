@@ -25,7 +25,7 @@
                             @csrf
                             <div class="mb-3">
                                 <label class="form-label">{{ __('auth.username') }}</label>
-                                <input type="text" name="username" value="{{ old('username') }}" required autofocus class="form-control @error('username') is-invalid @enderror" placeholder="Saisissez votre nom d'utilisateur">
+                                <input type="text" name="email" value="{{ old('username') }}" required autofocus class="form-control @error('username') is-invalid @enderror" placeholder="Saisissez votre nom d'utilisateur">
                                 @error('username')<span class="invalid-feedback" role="alert">{{ $message }}</span>@enderror
                             </div>
 
