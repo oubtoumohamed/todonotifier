@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    {!! showalerts() !!}
     <!-- auth-page wrapper -->
     <div class="min-vh-100 p-5" style="background-image: url('{{ asset('img/bg.jpg') }}'); background-size: cover;">
         <div class="container p-5">
