@@ -19497,7 +19497,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 if ('serviceWorker' in navigator && 'PushManager' in window) {
   window.addEventListener('load', /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-    var registration;
+    var registration, permissionGranted;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
@@ -19507,63 +19507,75 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
         case 3:
           registration = _context.sent;
           console.log('ServiceWorker registration successful');
+
+          // Request notification permission
           _context.next = 7;
-          return subscribeUser(registration);
+          return requestNotificationPermission();
         case 7:
+          permissionGranted = _context.sent;
+          if (permissionGranted) {
+            _context.next = 10;
+            break;
+          }
+          return _context.abrupt("return", false);
+        case 10:
           _context.next = 12;
+          return subscribeUser(registration);
+        case 12:
+          _context.next = 17;
           break;
-        case 9:
-          _context.prev = 9;
+        case 14:
+          _context.prev = 14;
           _context.t0 = _context["catch"](0);
           console.log('ServiceWorker registration failed: ', _context.t0);
-        case 12:
+        case 17:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 9]]);
+    }, _callee, null, [[0, 14]]);
   })));
 }
 function subscribeUser(_x) {
   return _subscribeUser.apply(this, arguments);
 }
 function _subscribeUser() {
-  _subscribeUser = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(registration) {
+  _subscribeUser = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(registration) {
     var subscription, response, vapidPublicKey, convertedVapidKey, newSubscription;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) switch (_context2.prev = _context2.next) {
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
         case 0:
-          _context2.next = 2;
+          _context3.next = 2;
           return registration.pushManager.getSubscription();
         case 2:
-          subscription = _context2.sent;
+          subscription = _context3.sent;
           if (!subscription) {
-            _context2.next = 5;
+            _context3.next = 5;
             break;
           }
-          return _context2.abrupt("return", sendSubscriptionToServer(subscription));
+          return _context3.abrupt("return", sendSubscriptionToServer(subscription));
         case 5:
-          _context2.next = 7;
+          _context3.next = 7;
           return fetch('api/vapid-public-key');
         case 7:
-          response = _context2.sent;
-          _context2.next = 10;
+          response = _context3.sent;
+          _context3.next = 10;
           return response.json();
         case 10:
-          vapidPublicKey = _context2.sent;
+          vapidPublicKey = _context3.sent;
           convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey.publicKey);
-          _context2.next = 14;
+          _context3.next = 14;
           return registration.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: convertedVapidKey
           });
         case 14:
-          newSubscription = _context2.sent;
+          newSubscription = _context3.sent;
           sendSubscriptionToServer(newSubscription);
         case 16:
         case "end":
-          return _context2.stop();
+          return _context3.stop();
       }
-    }, _callee2);
+    }, _callee3);
   }));
   return _subscribeUser.apply(this, arguments);
 }
@@ -19577,6 +19589,46 @@ function sendSubscriptionToServer(subscription) {
     body: JSON.stringify(subscription)
   });
 }
+var requestNotificationPermission = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+    var permission;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
+        case 0:
+          if ('Notification' in window) {
+            _context2.next = 3;
+            break;
+          }
+          console.error('This browser does not support notifications.');
+          return _context2.abrupt("return", false);
+        case 3:
+          if (!(Notification.permission === 'granted')) {
+            _context2.next = 5;
+            break;
+          }
+          return _context2.abrupt("return", true);
+        case 5:
+          if (!(Notification.permission !== 'denied')) {
+            _context2.next = 10;
+            break;
+          }
+          _context2.next = 8;
+          return Notification.requestPermission();
+        case 8:
+          permission = _context2.sent;
+          return _context2.abrupt("return", permission === 'granted');
+        case 10:
+          return _context2.abrupt("return", false);
+        case 11:
+        case "end":
+          return _context2.stop();
+      }
+    }, _callee2);
+  }));
+  return function requestNotificationPermission() {
+    return _ref2.apply(this, arguments);
+  };
+}();
 function urlBase64ToUint8Array(base64String) {
   var padding = '='.repeat((4 - base64String.length % 4) % 4);
   var base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');

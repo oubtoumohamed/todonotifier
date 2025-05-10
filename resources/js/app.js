@@ -5,6 +5,11 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
         try {
             const registration = await navigator.serviceWorker.register('sw.js');
             console.log('ServiceWorker registration successful');
+
+            
+        // Request notification permission
+        const permissionGranted = await requestNotificationPermission();
+        if (!permissionGranted) return false;
             
             await subscribeUser(registration);
         } catch (err) {
@@ -42,6 +47,25 @@ function sendSubscriptionToServer(subscription) {
         body: JSON.stringify(subscription)
     });
 }
+
+const requestNotificationPermission = async () => {
+    if (!('Notification' in window)) {
+        console.error('This browser does not support notifications.');
+        return false;
+    }
+    
+    if (Notification.permission === 'granted') {
+        return true;
+    }
+    
+    if (Notification.permission !== 'denied') {
+        const permission = await Notification.requestPermission();
+        return permission === 'granted';
+    }
+    
+    return false;
+};
+
 
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
